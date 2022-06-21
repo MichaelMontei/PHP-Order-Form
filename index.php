@@ -33,40 +33,82 @@ $products = [
     ['name' => 'Pixelalo Kakashi Hatake', 'price' => 10],
 ];
 
-$totalValue = 0;
-
-function validate()
-{
-    // TODO: This function will send a list of invalid fields back
-    if(empty($email) || empty($street) || empty($streetnumber) || empty($city) || empty($zipcode)){
-        echo "You did not fill out the required fields.";
-    }
-    return [];
+function getProducts($products){
+        foreach ($_POST['products'] as $product) {
+            echo implode(": ", $products[$product]) . "<br>";
+        }
 }
 
-function handleForm()
-{
-    // TODO: form related tasks (step 1)
+$_SESSION["totalValue"] = 0;
+$email_error = $street_error = $city_error = $streetnumber_error = $zipcode_error = "";
+$email = $street = $streetNumber = $zipcode = $city = "";
+
+function validate()
+{ // TODO: This function will send a list of invalid fields back
+
+}
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (empty($_POST["email"])) {
+            $email_error = "Email is required";
+        } else {
+            $email = test_input($_POST["email"]);
+        }
+        if (empty($_POST["street"])) {
+            $street_error = "Street is required";
+        } else {
+            $street = test_input($_POST["street"]);
+        }
+        if (empty($_POST["city"])) {
+            $city_error = "City is required";
+        } else {
+            $city = test_input($_POST["city"]);
+        }
+        if (empty($_POST["streetnumber"])) {
+            $streetnumber_error = "Streetnumber is required";
+        } else {
+            $streetNumber = test_input($_POST["streetnumber"]);
+        }
+        if (empty($_POST["zipcode"])) {
+            $zipcode_error = "Zipcode is required";
+        } else {
+            $zipcode = test_input($_POST["zipcode"]);
+        }
+}
+
+function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+
+
+function handleForm(){      // TODO: form related tasks (step 1)
+
+    $street = $_POST["street"];
+    $streetNumber = $_POST["streetnumber"];
+    $zipcode = $_POST["zipcode"];
+    $city = $_POST["city"];
+    $address = $street . " " . $streetNumber . " " . $city . " " . $zipcode;
+
+    echo "We will ship your order to the following address: " .$address . "<br>";
+
 
     // Validation (step 2)
     $invalidFields = validate();
     if (!empty($invalidFields)) {
         // TODO: handle errors
+
     } else {
         // TODO: handle successful submission
     }
 }
 
 // TODO: replace this if by an actual check
-$formSubmitted = false;
-if ($formSubmitted) {
+if (isset($_POST["submit"])) {
     handleForm();
+    getProducts($products);
 }
 
 require 'form-view.php';
-
-
-echo 'Street: ' . $_POST ["street"] . '<br>';
-echo 'Streetnumber: ' . $_POST ["streetnumber"] . '<br>';
-echo 'City: ' . $_POST ["city"] . '<br>';
-echo 'Zipcode: ' . $_POST ["zipcode"];
