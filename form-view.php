@@ -9,9 +9,18 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css"
           rel="stylesheet"/>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
     <title>Pixelalo Building Store</title>
 </head>
 <body>
+<?php
+
+?>
+<img id="logo" src="download.jpg" alt="logo">
+
+
+
 <div class="container">
     <h1>Place your order</h1>
     <?php // Navigation for when you need it ?>
@@ -27,10 +36,10 @@
         </ul>
     </nav>
     */ ?>
-    <form action="index.php" method="post">
+    <form action="index.php" method="post" id="container-all">
         <div class="form-row">
             <div class="form-group col-md-6">
-                <label for="email">E-mail:</label>
+                <label for="email" id="email">E-mail:</label>
                 <input type="email" id="email" name="email" class="form-control"/>
                 <span class="error">* <?php echo $email_error;?></span>
             </div>
@@ -66,7 +75,7 @@
             </div>
         </fieldset>
 
-        <fieldset>
+        <fieldset id="productscontainer">
             <legend>Products</legend>
             <?php foreach ($products as $i => $product): ?>
                 <label>
@@ -76,10 +85,16 @@
             <?php endforeach; ?>
         </fieldset>
 
-        <button name="submit" type="submit" class="btn btn-primary">Order!</button>
+        <button id="button" name="submit" type="submit" class="btn btn-primary">Order!</button>
     </form>
 
-    <footer>You already ordered <strong>&euro; <?php echo $_SESSION["totalValue"] ?></strong> in Pixelalo Characters!</footer>
+    <footer>You ordered <strong>&euro; <?php echo $_SESSION["totalValue"] ?></strong> in Pixelalo Characters!
+        <br>
+        <span class="error"> <?php echo "We will ship your order to the following address: " .$address .  "<br>";?> </span>
+
+        <!--        <span class="pixel">--><?php // echo implode(": ", $products[$product]) . "<br>";   ;?><!--</span>-->
+
+    </footer>
 </div>
 
 <style>

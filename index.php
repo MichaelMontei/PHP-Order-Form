@@ -21,6 +21,17 @@ function whatIsHappening() {
     var_dump($_SESSION);
 }
 
+$street = $_POST["street"];
+$streetNumber = $_POST["streetnumber"];
+$zipcode = $_POST["zipcode"];
+$city = $_POST["city"];
+$address = $street . " " . $streetNumber . " " . $city . " " . $zipcode;
+$_SESSION["totalValue"] = 0;
+$email_error = $street_error = $city_error = $streetnumber_error = $zipcode_error = "";
+$email = $street = $streetNumber = $zipcode = $city = "";
+$product = 0;
+$itemsListed = [];
+
 // TODO: provide some products (you may overwrite the example)
 $products = [
     ['name' => 'Pixelalo Pokéball', 'price' => 10],
@@ -33,15 +44,27 @@ $products = [
     ['name' => 'Pixelalo Kakashi Hatake', 'price' => 10],
 ];
 
-function getProducts($products){
-        foreach ($_POST['products'] as $product) {
-            echo implode(": ", $products[$product]) . "<br>";
+
+
+    $arrayPixelalo = [];
+    $arrayPrices = [];
+    if (!empty($_POST['products'])) {
+        $itemsChecked = count($_POST['products']);
+        foreach ($_POST['products'] as $value){
+            array_push($arrayPixelalo, $products[$value]['name']);
+            array_push($arrayPrices, $products[$value]['price']);
+            //var_dump($arrayPixelalo);
         }
 }
 
-$_SESSION["totalValue"] = 0;
-$email_error = $street_error = $city_error = $streetnumber_error = $zipcode_error = "";
-$email = $street = $streetNumber = $zipcode = $city = "";
+function getProducts($products){
+        foreach ($_POST['products'] as $product) {
+            echo implode(": ", $products[$product]) . "<br>";
+            $currentOrderCost = 0;
+            $_SESSION["totalValue"] += $products[$product]["price"];
+            $currentOrderCost += $products[$product]["price"];
+        }
+}
 
 function validate()
 { // TODO: This function will send a list of invalid fields back
@@ -52,16 +75,28 @@ function validate()
             $email_error = "Email is required";
         } else {
             $email = test_input($_POST["email"]);
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $email_error = "Not a Valid email address";
+                $email = null;
+            }
         }
         if (empty($_POST["street"])) {
             $street_error = "Street is required";
         } else {
             $street = test_input($_POST["street"]);
+            if (!preg_match("/^[a-zA-Z-' ]*$/", $street)) {
+                $streetError = "Only use letters and whitespace please!";
+                $street = null;
+            }
         }
         if (empty($_POST["city"])) {
             $city_error = "City is required";
         } else {
             $city = test_input($_POST["city"]);
+            if (!preg_match("/^[a-zA-Z-' ]*$/", $city)) {
+                $city_error = "Only use letters and whitespace please!";
+                $city = null;
+            }
         }
         if (empty($_POST["streetnumber"])) {
             $streetnumber_error = "Streetnumber is required";
@@ -72,6 +107,10 @@ function validate()
             $zipcode_error = "Zipcode is required";
         } else {
             $zipcode = test_input($_POST["zipcode"]);
+            if (!preg_match("/^\d*$/", $zipcode)) {
+                $zipcode_error = "Only Numbers please!";
+                $zipcode = null;
+            }
         }
 }
 
@@ -82,8 +121,6 @@ function test_input($data) {
     return $data;
 }
 
-
-
 function handleForm(){      // TODO: form related tasks (step 1)
 
     $street = $_POST["street"];
@@ -92,7 +129,7 @@ function handleForm(){      // TODO: form related tasks (step 1)
     $city = $_POST["city"];
     $address = $street . " " . $streetNumber . " " . $city . " " . $zipcode;
 
-    echo "We will ship your order to the following address: " .$address . "<br>";
+
 
 
     // Validation (step 2)
@@ -104,6 +141,14 @@ function handleForm(){      // TODO: form related tasks (step 1)
         // TODO: handle successful submission
     }
 }
+
+
+function pre_r( $array ){
+        echo '<pre>';
+        print_r($array);
+        echo '<pre>';
+}
+
 
 // TODO: replace this if by an actual check
 if (isset($_POST["submit"])) {
